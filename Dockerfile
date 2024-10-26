@@ -1,7 +1,14 @@
 # Set the Python version as a build-time argument
 # Default is Python 3.13 for Windows
-ARG PYTHON_VERSION=3.13-windowsservercore-ltsc2022
-FROM python:${PYTHON_VERSION}
+ARG PYTHON_VERSION=3.13
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+# Download and install Python
+RUN powershell -Command \
+    $ErrorActionPreference = 'Stop'; \
+    Invoke-WebRequest -Uri "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-amd64.exe" -OutFile "python-installer.exe"; \
+    Start-Process -Wait -FilePath "python-installer.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1"; \
+    Remove-Item -Force python-installer.exe
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -15,7 +22,7 @@ RUN python -m ensurepip --upgrade && \
 # Set the virtual environment in PATH
 ENV PATH="env\Scripts;${PATH}"
 
-# Install dependencies required by Python packages
+# Install Chocolatey and required packages
 SHELL ["powershell", "-Command"]
 RUN Set-ExecutionPolicy Bypass -Scope Process -Force; \
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
@@ -23,7 +30,7 @@ RUN Set-ExecutionPolicy Bypass -Scope Process -Force; \
     choco install -y postgresql; \
     choco install -y libjpeg-turbo; \
     choco install -y cairo; \
-    choco install -y mingw;
+    choco install -y mingw
 
 # Create the code directory
 RUN mkdir src
@@ -32,13 +39,13 @@ RUN mkdir src
 WORKDIR /src
 
 # Copy the requirements file into the container
-COPY requirements.txt .
+COPY requirements.txt . 
 
 # Copy the project code into the container's working directory
-COPY . .
+COPY . . 
 
 # Install the Python project requirements
-RUN env\Scripts\python -m pip install -r requirements.txt
+RUN env\Scripts\python -m pip install -r requirements.txt 
 
 # Set the Django default project name
 ARG PROJ_NAME="Saas"
