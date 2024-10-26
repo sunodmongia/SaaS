@@ -1,60 +1,73 @@
-# Set the Python version as a build-time argument
-# Default is Python 3.13 for Windows
-ARG PYTHON_VERSION=3.13
-FROM mcr.microsoft.com/windows/servercore:ltsc2022
+# Set the python version as a build-time argument
+# with Python 3.12 as the default
+ARG PYTHON_VERSION=3.12-slim-bullseye
+FROM python:${PYTHON_VERSION}
 
-# Download and install Python
-RUN powershell -Command \
-    $ErrorActionPreference = 'Stop'; \
-    Invoke-WebRequest -Uri "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-amd64.exe" -OutFile "python-installer.exe"; \
-    Start-Process -Wait -FilePath "python-installer.exe" -ArgumentList "/quiet InstallAllUsers=1 PrependPath=1"; \
-    Remove-Item -Force python-installer.exe
+# Create a virtual environment
+RUN python -m venv /opt/venv
 
-# Set environment variables
+# Set the virtual environment as the current location
+ENV PATH=/opt/venv/bin:$PATH
+
+# Upgrade pip
+RUN pip install --upgrade pip
+
+# Set Python-related environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Upgrade pip and create a virtual environment
-RUN python -m ensurepip --upgrade && \
-    python -m venv env && \
-    env\Scripts\python -m pip install --upgrade pip
+# Install os dependencies for our mini vm
+RUN apt-get update && apt-get install -y \
+    # for postgres
+    libpq-dev \
+    # for Pillow
+    libjpeg-dev \
+    # for CairoSVG
+    libcairo2 \
+    # other
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set the virtual environment in PATH
-ENV PATH="env\Scripts;${PATH}"
-
-# Install Chocolatey and required packages
-SHELL ["powershell", "-Command"]
-RUN Set-ExecutionPolicy Bypass -Scope Process -Force; \
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
-    iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1')); \
-    choco install -y postgresql; \
-    choco install -y libjpeg-turbo; \
-    choco install -y cairo; \
-    choco install -y mingw
-
-# Create the code directory
-RUN mkdir src
+# Create the mini vm's code directory
+RUN mkdir -p /code
 
 # Set the working directory to that same code directory
-WORKDIR /src
+WORKDIR /code
 
 # Copy the requirements file into the container
-COPY requirements.txt . 
+COPY requirements.txt .
 
-# Copy the project code into the container's working directory
-COPY . . 
+# copy the project code into the container's working directory
+COPY src/ .
 
 # Install the Python project requirements
-RUN env\Scripts\python -m pip install -r requirements.txt 
+RUN pip install -r requirements.txt
 
-# Set the Django default project name
-ARG PROJ_NAME="Saas"
+# database isn't available during build
+# run any other commands that do not need the database
+# such as:
+# RUN python manage.py collectstatic --noinput
 
-# Create a batch script to run the Django project
-RUN echo @echo off > paracord_runner.bat && \
-    echo set RUN_PORT=%%PORT%% ^|^| set RUN_PORT=8000 >> paracord_runner.bat && \
-    echo env\Scripts\python manage.py migrate --no-input >> paracord_runner.bat && \
-    echo env\Scripts\gunicorn %%PROJ_NAME%%.wsgi:application --bind 0.0.0.0:%%RUN_PORT%% >> paracord_runner.bat
+# set the Django default project name
+ARG PROJ_NAME="cfehome"
 
-# Set the entrypoint command
-ENTRYPOINT ["cmd", "/c", "paracord_runner.bat"]
+# create a bash script to run the Django project
+# this script will execute at runtime when
+# the container starts and the database is available
+RUN printf "#!/bin/bash\n" > ./paracord_runner.sh && \
+    printf "RUN_PORT=\"\${PORT:-8000}\"\n\n" >> ./paracord_runner.sh && \
+    printf "python manage.py migrate --no-input\n" >> ./paracord_runner.sh && \
+    printf "gunicorn ${PROJ_NAME}.wsgi:application --bind \"0.0.0.0:\$RUN_PORT\"\n" >> ./paracord_runner.sh
+
+# make the bash script executable
+RUN chmod +x paracord_runner.sh
+
+# Clean up apt cache to reduce image size
+RUN apt-get remove --purge -y \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Run the Django project via the runtime script
+# when the container starts
+CMD ["./paracord_runner.sh"]
