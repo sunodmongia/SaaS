@@ -29,7 +29,7 @@ RUN Set-ExecutionPolicy Bypass -Scope Process -Force; \
 RUN mkdir src
 
 # Set the working directory to that same code directory
-WORKDIR src
+WORKDIR /src
 
 # Copy the requirements file into the container
 COPY requirements.txt .
