@@ -1,6 +1,6 @@
 from django.shortcuts import reverse, render
 from django.views import generic
-from .models import Visitpage
+from .models import PageVisit
 import pathlib
 
 this_dir = pathlib.Path(__file__).resolve().parent
@@ -11,7 +11,7 @@ class HomeView(generic.TemplateView):
     get_context_data = "temp"
 
     def get_queryset(self):
-        queryset = Visitpage.objects.all()
+        queryset = PageVisit.objects.all()
         # queryset = queryset.order_by("-timestamp")
         # queryset = queryset[:5]
         return queryset
