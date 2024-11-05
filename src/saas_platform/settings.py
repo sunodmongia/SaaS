@@ -50,6 +50,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "command",
     "saas",
+    "widget_tweaks",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "tailwind",
+    "theme",
 ]
 
 MIDDLEWARE = [
@@ -103,6 +108,16 @@ if DATABASE_URL is not None:
         )
     }
 
+#  "default": {
+    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
+    #     "NAME": env("DB_NAME"),
+    #     "USER": env("DB_USER"),
+    #     "PASSWORD": env("DB_PASSWORD"),
+    #     "HOST": env("DB_HOST"),
+    #     "PORT": env("DB_PORT"),
+    # }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -148,6 +163,10 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 # sources for python manage.py collectstatic
 
 STATICFILES_DIRS = [STATICFILES_BASE_DIR]
@@ -157,12 +176,18 @@ STATICFILES_DIRS = [STATICFILES_BASE_DIR]
 # output for python manage.py collectstatic
 STATIC_ROOT = BASE_DIR.parent / "local-cdn"
 
+LOGOUT_REDIRECT_URL = "/login/"
+LOGIN_REDIRECT_URL = "/home/"
+LOGIN_URL = "/login/"
+
+CRISPY_TEMPLATE_PACK = "tailwind"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+TAILWIND_APP_NAME = "theme"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -171,3 +196,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("WIRE_APP_EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("WIRE_APP_EMAIL_PASSWORD")
+
+
+ADMINS = [("Sunod Kumar", "sunodmongia2003@gmail.com")]
+MANAGERS = ADMINS
