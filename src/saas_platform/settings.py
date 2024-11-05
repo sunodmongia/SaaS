@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "command",
     "saas",
 ]
 
@@ -138,8 +139,15 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
-STATIC_VENDORS_DIR = STATICFILES_BASE_DIR / "vendors"
+STATICFILES_BASE_DIR.mkdir(exist_ok=True, parents=True)
+STATICFILES_VENDORS_DIR = STATICFILES_BASE_DIR / "vendors"
 
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 # sources for python manage.py collectstatic
 
 STATICFILES_DIRS = [STATICFILES_BASE_DIR]
@@ -154,3 +162,12 @@ STATIC_ROOT = BASE_DIR.parent / "local-cdn"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("WIRE_APP_EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("WIRE_APP_EMAIL_PASSWORD")
