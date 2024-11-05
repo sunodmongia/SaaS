@@ -198,5 +198,3 @@ EMAIL_HOST_USER = os.environ.get("WIRE_APP_EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("WIRE_APP_EMAIL_PASSWORD")
 
 
-ADMINS = [("Sunod Kumar", "sunodmongia2003@gmail.com")]
-MANAGERS = ADMINS
