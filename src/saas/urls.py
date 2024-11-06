@@ -3,11 +3,14 @@ from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
 from django.conf.urls.static import static
 from django.conf import settings, urls
+from .views import *
+from . import views
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("login/", LoginView.as_view(), name="login"),
-    path("logout/", LogoutView.as_view(next_page="/login/"), name="logout"),
+    path("logout/", views.logout_view, name="logout"),
+    path("signup/", SignUpView.as_view(), name='signup')
 ]
 
 if settings.DEBUG:

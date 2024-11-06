@@ -1,7 +1,99 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
+<div class="bg-gray-50">
+    <!-- Hero section -->
+    <div class="relative bg-blue-800">
+        <div class="absolute inset-0">
+            <img class="w-full h-full object-cover" src="{% static 'images/hero-background.jpg' %}"
+                alt="Hero background">
+            <div class="absolute inset-0 bg-blue-900 opacity-70"></div>
+        </div>
+        <div class="relative max-w-7xl mx-auto py-28 px-6 text-center text-white sm:py-32 lg:py-48">
+            <h1 class="text-5xl font-extrabold leading-tight sm:text-6xl lg:text-7xl">Elevate Your Business with Us</h1>
+            <p class="mt-8 text-lg sm:text-xl lg:text-2xl max-w-2xl mx-auto">Boost productivity and streamline
+                operations with our advanced SaaS solution.</p>
+            <div class="mt-10 flex justify-center space-x-6">
+                <a href="#"
+                    class="px-8 py-3 rounded-md bg-indigo-600 text-white text-lg font-semibold hover:bg-indigo-700">Get
+                    Started</a>
+                <a href="#"
+                    class="px-8 py-3 rounded-md bg-white text-indigo-600 font-semibold hover:bg-gray-100">Learn More</a>
+            </div>
+        </div>
+    </div>
 
-<div>
-    hello this home page
+    <!-- How It Works Section -->
+    <div class="bg-white py-24">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">How It Works</h2>
+            <p class="mt-4 text-lg text-gray-500">Our platform streamlines your workflow from start to finish with
+                intuitive tools.</p>
+
+            <div class="mt-16 grid gap-8 lg:grid-cols-3 lg:max-w-none">
+                <div class="text-left">
+                    <img src="{% static 'images/feature-1.jpg' %}" alt="Feature 1"
+                        class="w-full h-48 object-cover rounded-md">
+                    <h3 class="mt-6 text-xl font-semibold text-gray-900">Easy Onboarding</h3>
+                    <p class="mt-4 text-gray-600">Get started in minutes with our easy-to-follow onboarding process
+                        designed to guide you through every feature.</p>
+                </div>
+                <div class="text-left">
+                    <img src="{% static 'images/feature-2.jpg' %}" alt="Feature 2"
+                        class="w-full h-48 object-cover rounded-md">
+                    <h3 class="mt-6 text-xl font-semibold text-gray-900">Data Insights</h3>
+                    <p class="mt-4 text-gray-600">Our data-driven analytics give you the insights you need to make
+                        informed business decisions.</p>
+                </div>
+                <div class="text-left">
+                    <img src="{% static 'images/feature-3.jpg' %}" alt="Feature 3"
+                        class="w-full h-48 object-cover rounded-md">
+                    <h3 class="mt-6 text-xl font-semibold text-gray-900">Customizable Solutions</h3>
+                    <p class="mt-4 text-gray-600">Tailor our platform to meet the unique needs of your business with
+                        customizable workflows and features.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Success Stories -->
+    <div class="bg-blue-800 py-24 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center">Customer Success Stories</h2>
+            <div class="mt-12 grid gap-8 lg:grid-cols-3">
+                <div class="bg-blue-900 p-8 rounded-lg">
+                    <p class="text-lg">"Our efficiency improved by 150% within the first month. It's been a
+                        game-changer!"</p>
+                    <footer class="mt-6 text-right">- Alex Johnson, CTO at Syncware</footer>
+                </div>
+                <div class="bg-blue-900 p-8 rounded-lg">
+                    <p class="text-lg">"The analytics dashboard has revolutionized our approach to data and insights."
+                    </p>
+                    <footer class="mt-6 text-right">- Maria Chen, Head of Operations at FinSave</footer>
+                </div>
+                <div class="bg-blue-900 p-8 rounded-lg">
+                    <p class="text-lg">"Onboarding was seamless, and the support team was fantastic!"</p>
+                    <footer class="mt-6 text-right">- Ben Evans, CEO at TradeRite</footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-gray-50 py-24">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Ready to Transform Your Business?</h2>
+            <p class="mt-4 text-lg text-gray-600">Start your free trial today and discover the impact our platform can
+                have on your organization.</p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="#"
+                    class="px-8 py-3 rounded-md bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Get
+                    Started</a>
+                <a href="#"
+                    class="px-8 py-3 rounded-md bg-gray-100 text-indigo-600 font-semibold hover:bg-gray-200">Contact
+                    Sales</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
