@@ -10,7 +10,10 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", views.logout_view, name="logout"),
-    path("signup/", SignUpView.as_view(), name='signup')
+    path("signup/", SignUpView.as_view(), name='signup'),
+
+    #account specificer
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

@@ -48,14 +48,27 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    #custom apps
     "command",
     "saas",
-    "widget_tweaks",
     "crispy_forms",
     "crispy_bootstrap5",
     "tailwind",
-    "theme",
+    "allauth_ui",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "widget_tweaks",
+    "slippers",
 ]
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -66,6 +79,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
@@ -89,6 +103,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "saas_platform.wsgi.application"
 
+# Django Allauth  configuration
+ALLAUTH_UI_THEME = "light"
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[Wire]"
+ACCOUNT_EMAIL_REQUIRED = True
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        "APP": {"client_id": "123", "secret": "456", "key": ""}
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -109,13 +144,13 @@ if DATABASE_URL is not None:
     }
 
 #  "default": {
-    #     "ENGINE": "django.db.backends.postgresql_psycopg2",
-    #     "NAME": env("DB_NAME"),
-    #     "USER": env("DB_USER"),
-    #     "PASSWORD": env("DB_PASSWORD"),
-    #     "HOST": env("DB_HOST"),
-    #     "PORT": env("DB_PORT"),
-    # }
+#     "ENGINE": "django.db.backends.postgresql_psycopg2",
+#     "NAME": env("DB_NAME"),
+#     "USER": env("DB_USER"),
+#     "PASSWORD": env("DB_PASSWORD"),
+#     "HOST": env("DB_HOST"),
+#     "PORT": env("DB_PORT"),
+# }
 
 
 # Password validation
@@ -182,9 +217,8 @@ LOGIN_URL = "login/"
 
 CRISPY_TEMPLATE_PACK = "tailwind"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-TAILWIND_APP_NAME = "theme"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -198,5 +232,3 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("WIRE_APP_EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("WIRE_APP_EMAIL_PASSWORD")
-
-
