@@ -171,6 +171,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -210,9 +211,9 @@ STATICFILES_DIRS = [STATICFILES_BASE_DIR]
 # output for python manage.py collectstatic
 STATIC_ROOT = BASE_DIR.parent / "local-cdn"
 
-LOGOUT_REDIRECT_URL = "login/"
-LOGIN_REDIRECT_URL = "/"
-LOGIN_URL = "login/"
+LOGOUT_REDIRECT_URL = "/home/"
+LOGIN_REDIRECT_URL = "/home/"
+LOGIN_URL = "/accounts/login/"
 
 CRISPY_TEMPLATE_PACK = "tailwind"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
