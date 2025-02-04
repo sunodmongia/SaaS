@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     #custom apps
     "command",
     "saas",
+    "profiles",
     "crispy_forms",
     "crispy_bootstrap5",
     "tailwind",
@@ -209,8 +210,8 @@ STATICFILES_DIRS = [STATICFILES_BASE_DIR]
 # output for python manage.py collectstatic
 STATIC_ROOT = BASE_DIR.parent / "local-cdn"
 
-LOGOUT_REDIRECT_URL = "/home/"
-LOGIN_REDIRECT_URL = "/home/"
+LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/accounts/login/"
 
 CRISPY_TEMPLATE_PACK = "tailwind"

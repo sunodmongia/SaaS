@@ -12,17 +12,18 @@
         {% block title %}
         {% endblock %}
     </title>
-    {% block extra_head %}
+    
     <link rel="stylesheet" href="{% static 'allauth_ui/output.css' %}">
-    {% endblock extra_head %}
+    
 </head>
 
 <body>
-
-    {% include "nav/navbar.html" %} {# Your existing navbar #}
+    {% include "nav/navbar.html" %} 
+    {% include 'messages.html' with messages=messages %}
 
     <div class="container mt-4">
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 
     {% block extra_js %}{% endblock %}

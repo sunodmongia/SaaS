@@ -29,6 +29,7 @@ from django.contrib.auth.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("saas.urls")),
+    
     # password reset urls
     path(
         "password-reset/",

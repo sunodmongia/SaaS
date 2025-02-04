@@ -18,7 +18,8 @@
         {% if title %}
             {{ title }}
         {% else %}
-            SaaS
+            {% block title %}
+            {% endblock %}
         {% endif %}
     </title>
     {% include 'base/css.html' %}
@@ -26,13 +27,11 @@
 </head>
 
 <body>
-    {% include 'base/messages.html' with messages=messages %}
+    {% include 'nav/navbar.html' %}
+    {% include 'messages.html' with messages=messages %}
     <div>
-        {% include 'nav/navbar.html' %}
-    </div>
-
-    <div>
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 
     {% include 'base/js.html' %}

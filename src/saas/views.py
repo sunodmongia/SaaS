@@ -55,19 +55,13 @@ def pw_protected_view(request, *args, **kwargs):
     return render(request, "protected/entry.html")
 
 
-class UserViewOnly(generic.CreateView):
-    template_name = "protected/user_only.html"
+@login_required(login_url=LOGIN_URL)
+def UserViewOnly(request, *args, **kwargs):
+    return render(request, "protected/user_only.html")
 
-    @login_required(login_url=LOGIN_URL)
-    def UserView(request, *args, **kwargs):
-        return render(request, "protected/user_only.html")
-
-class StaffViewOnly(generic.CreateView):
-    template_name = "protected/staff_only.html"
-
-    @staff_member_required(login_url=LOGIN_URL)
-    def UserView(request, *args, **kwargs):
-        return render(request, "protected/staff_only.html")
+@staff_member_required(login_url=LOGIN_URL)
+def StaffViewOnly(request, *args, **kwargs):
+    return render(request, "protected/staff_only.html")
 
 
 # def home_page(request, *args, **kwargs):

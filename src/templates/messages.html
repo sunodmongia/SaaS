@@ -1,6 +1,8 @@
+{% load static %}
+<br><br><br>
 {% if messages %}
     {% for message in messages %}
-        <div role="alert" class="text-sm md:text-base alert alert-{{ message.tags }}">
+        <div role="alert" class="py-10 md:text-base alert alert-{{ message.tags }}">
             <span>
                 <strong>
                 {{ message }}
