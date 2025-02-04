@@ -1,5 +1,8 @@
 from django.shortcuts import reverse, render, redirect
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
 from django.views import generic
 from .models import PageVisit
 import pathlib
@@ -7,6 +10,8 @@ from .forms import *
 
 this_dir = pathlib.Path(__file__).resolve().parent
 
+
+LOGIN_URL = settings.LOGIN_URL
 
 class HomeView(generic.TemplateView):
     template_name = "home.html"
@@ -34,6 +39,35 @@ class SignUpView(generic.CreateView):
     def get_success_url(self):
         return reverse("login")
 
+
+PASSWORD = "7374wire"
+
+
+def pw_protected_view(request, *args, **kwargs):
+    is_allowed = request.session.get("Page_access") or 0
+    if request.method == "POST":
+        user_sent = request.POST.get("PASSWORD") or None
+        if user_sent == PASSWORD:
+            is_allowed = 1
+            request.session["Page_access"] = is_allowed
+    if is_allowed:
+        return render(request, "protected/view.html")
+    return render(request, "protected/entry.html")
+
+
+class UserViewOnly(generic.CreateView):
+    template_name = "protected/user_only.html"
+
+    @login_required(login_url=LOGIN_URL)
+    def UserView(request, *args, **kwargs):
+        return render(request, "protected/user_only.html")
+
+class StaffViewOnly(generic.CreateView):
+    template_name = "protected/staff_only.html"
+
+    @staff_member_required(login_url=LOGIN_URL)
+    def UserView(request, *args, **kwargs):
+        return render(request, "protected/staff_only.html")
 
 
 # def home_page(request, *args, **kwargs):
