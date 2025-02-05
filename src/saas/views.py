@@ -3,8 +3,9 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
-from django.views import generic
-from .models import PageVisit
+from django.views import generic, View
+from django.utils.decorators import method_decorator
+
 import pathlib
 from .forms import *
 
@@ -12,6 +13,7 @@ this_dir = pathlib.Path(__file__).resolve().parent
 
 
 LOGIN_URL = settings.LOGIN_URL
+
 
 class HomeView(generic.TemplateView):
     template_name = "home.html"
@@ -42,26 +44,36 @@ class SignUpView(generic.CreateView):
 
 PASSWORD = "7374wire"
 
+class PasswordProtectedView(View):
+    template_entry = "protected/entry.html"
+    template_view = "protected/view.html"
 
-def pw_protected_view(request, *args, **kwargs):
-    is_allowed = request.session.get("Page_access") or 0
-    if request.method == "POST":
-        user_sent = request.POST.get("PASSWORD") or None
+    def get(self, request, *args, **kwargs):
+        is_allowed = request.session.get('Page_access') or 0
+        if is_allowed:
+            return render(request, self.template_view)
+        return render(request, self.template_entry)
+    
+    def post(self, request, *args, **kwargs):
+        if request.method == "POST":
+            user_sent = request.POST.get("PASSWORD") or None
         if user_sent == PASSWORD:
             is_allowed = 1
             request.session["Page_access"] = is_allowed
-    if is_allowed:
-        return render(request, "protected/view.html")
-    return render(request, "protected/entry.html")
+            return render(request, self.template_view)
+        return render(request, self.template_entry)
+    
 
+    
+@method_decorator(login_required(login_url=LOGIN_URL), name="dispatch")
+class UserViewOnly(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "protected/user_only.html")
 
-@login_required(login_url=LOGIN_URL)
-def UserViewOnly(request, *args, **kwargs):
-    return render(request, "protected/user_only.html")
-
-@staff_member_required(login_url=LOGIN_URL)
-def StaffViewOnly(request, *args, **kwargs):
-    return render(request, "protected/staff_only.html")
+@method_decorator(staff_member_required(login_url=LOGIN_URL), name="dispatch")
+class StaffViewOnly(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, "protected/staff_only.html")
 
 
 # def home_page(request, *args, **kwargs):

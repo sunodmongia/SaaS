@@ -12,9 +12,9 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("signup/", SignUpView.as_view(), name="signup"),
-    path("protected/", views.pw_protected_view, name="protected"),
-    path("protected/staffview", views.StaffViewOnly, name="staff_view"),
-    path("protected/userview", views.UserViewOnly, name="user_view"),
+    path("protected/", PasswordProtectedView.as_view(), name="protected"),
+    path("protected/staffview", StaffViewOnly.as_view(), name="staff_view"),
+    path("protected/userview", UserViewOnly.as_view(), name="user_view"),
     # account specificer
     path("accounts/", include("allauth.urls")),
     path("profiles/", include("profiles.urls")),
