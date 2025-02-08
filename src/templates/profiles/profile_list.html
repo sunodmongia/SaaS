@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Active Users{% endblock %}
+
+{% block content %}
+
+<h1>
+    {{ instance.username }}
+</h1>
+
+<div>
+    {% for query in object_list %}
+    <a href="{% url 'username_profile' pk=user.pk username=user.username %}" class="hover:no-underline text-black">
+        {{ query.username }} <br>
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

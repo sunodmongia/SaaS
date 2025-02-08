@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile Detail{% endblock %}
+
+{% block content %}
+
+<h1>
+    {{ instance.username }}
+</h1>
+<div>
+    {% if perms.auth or owner %}
+    {% if perms.auth.view_user or owner %}
+    <div>
+        Name: {{ instance.first_name }} {{ instance.last_name }} <br>
+        Username: {{ instance.username }} <br>
+        Email: {{ instance.email }} <br>
+        Last Login: {{ instance.last_login }} <br>
+    </div>
+    {% else %}
+    <div>
+        You are not allowed
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+{% endblock %}
